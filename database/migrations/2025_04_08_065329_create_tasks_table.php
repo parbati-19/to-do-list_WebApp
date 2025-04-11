@@ -12,12 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // <-- Primary key
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('Description');
-            $table->enum('status', ['Pending','In Progress','Completed']);
+            $table->text('description')->nullable();
+            $table->date('due_date')->nullable();
+            $table->enum('status', ['Pending', 'In_Progress', 'Completed'])->default('Pending');
             $table->timestamps();
         });
+        
     }
 
     /**

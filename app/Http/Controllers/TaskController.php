@@ -4,81 +4,101 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Show all tasks for the logged-in user
+    public function index(Request $request)
     {
-        $tasks = Task::latest()->get();
-        return view("tasks.index", compact("tasks"));
+        // Start by fetching only tasks for the logged-in user
+        $tasks = Task::where('user_id', Auth::id());
+
+        // Apply status filter if specified in the request
+        if ($request->has('status') && $request->status != '') {
+            $tasks->where('status', $request->status);
+        }
+
+        // Fetch the filtered tasks
+        $tasks = $tasks->get();
+
+        // Pass the tasks to the view
+        return view('tasks.index', compact('tasks'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
+    // Show create form
     public function create()
     {
-        return view("tasks.create");
+        return view('tasks.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store new task
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|max:255',
-            'Description' => 'nullable',
-            'status' => 'required|in:Pending,In Progress,Completed'
+            'description' => 'nullable',
+            'status' => 'required|in:Pending,In_Progress,Completed',
+            'due_date' => 'nullable|date'
         ]);
 
-        Task::create($request->all());
+        Task::create([
+            'user_id' => Auth::id(),
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'due_date' => $request->due_date
+        ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Show edit form
     public function edit(Task $task)
     {
+        if ($task->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         return view('tasks.edit', compact('task'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Update task
     public function update(Request $request, Task $task)
     {
+        if ($task->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required|max:255',
-            'Description' => 'nullable',
-            'status' => 'required|in:Pending,In Progress,Completed'
+            'description' => 'nullable',
+            'status' => 'required|in:Pending,In_Progress,Completed',
+            'due_date' => 'nullable|date'
         ]);
 
-        $task->update($request->all());
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'due_date' => $request->due_date
+        ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Delete task
+    public function destroy($id)
     {
-        Task::destroy($id);
+        $task = Task::findOrFail($id);
+
+        if ($task->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $task->delete();
+
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
     }
 }
