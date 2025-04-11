@@ -26,13 +26,18 @@
                   </a>
 
                   <!-- Filter Form -->
-                  <form method="GET" action="{{ route('tasks.index') }}" class="mb-6">
+                  <form method="GET" action="{{ route('tasks.index') }}" class="mb-6 flex gap-2 flex-wrap">
                       <select name="status" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white text-black dark:bg-gray-700 dark:text-white">
                           <option value="">All Status</option>
                           <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                           <option value="In_Progress" {{ request('status') == 'In_Progress' ? 'selected' : '' }}>In Progress</option>
                           <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
                       </select>
+
+                      <input type="text" name="label" placeholder="Filter by label"
+                             value="{{ request('label') }}"
+                             class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white text-black dark:bg-gray-700 dark:text-white">
+
                       <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Filter</button>
                   </form>
 
@@ -44,6 +49,7 @@
                         <tr>
                           <th class="px-6 py-3 text-left">Title</th>
                           <th class="px-6 py-3 text-left">Description</th>
+                          <th class="px-6 py-3 text-left">Label</th>
                           <th class="px-6 py-3 text-left">Status</th>
                           <th class="px-6 py-3 text-left">Actions</th>
                         </tr>
@@ -53,6 +59,7 @@
                           <tr class="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4">{{ $task->title }}</td>
                             <td class="px-6 py-4">{{ $task->description }}</td>
+                            <td class="px-6 py-4">{{ $task->label ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $task->status }}</td>
                             <td class="px-6 py-4 flex gap-2">
                               <a href="{{ route('tasks.edit', $task->id) }}"

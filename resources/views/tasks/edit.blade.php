@@ -30,6 +30,13 @@
                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white text-black dark:bg-gray-700 dark:text-white" />
                         </div>
 
+                        <!-- Label Field -->
+                        <div class="mb-4">
+                            <label for="label" class="block text-gray-800 dark:text-gray-100 mb-1">Label</label>
+                            <input type="text" name="label" value="{{ $task->label }}"
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white text-black dark:bg-gray-700 dark:text-white" />
+                        </div>
+
                         <!-- Status Field -->
                         <div class="mb-4">
                             <label for="status" class="block text-gray-800 dark:text-gray-100 mb-1">Status</label>

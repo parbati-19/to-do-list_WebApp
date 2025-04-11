@@ -11,21 +11,23 @@ class TaskController extends Controller
     // Show all tasks for the logged-in user
     public function index(Request $request)
     {
-        // Start by fetching only tasks for the logged-in user
         $tasks = Task::where('user_id', Auth::id());
 
-        // Apply status filter if specified in the request
+        // Filter by status if set
         if ($request->has('status') && $request->status != '') {
             $tasks->where('status', $request->status);
         }
 
-        // Fetch the filtered tasks
+        // Filter by label (partial match)
+        if ($request->has('label') && $request->label != '') {
+            $tasks->where('label', 'like', '%' . $request->label . '%');
+
+        }
+
         $tasks = $tasks->get();
 
-        // Pass the tasks to the view
         return view('tasks.index', compact('tasks'));
     }
-
 
     // Show create form
     public function create()
@@ -40,7 +42,8 @@ class TaskController extends Controller
             'title' => 'required|max:255',
             'description' => 'nullable',
             'status' => 'required|in:Pending,In_Progress,Completed',
-            'due_date' => 'nullable|date'
+            'due_date' => 'nullable|date',
+            'label' => 'nullable|string|max:50',
         ]);
 
         Task::create([
@@ -48,7 +51,8 @@ class TaskController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
-            'due_date' => $request->due_date
+            'due_date' => $request->due_date,
+            'label' => $request->label,
         ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task created successfully!');
@@ -75,14 +79,16 @@ class TaskController extends Controller
             'title' => 'required|max:255',
             'description' => 'nullable',
             'status' => 'required|in:Pending,In_Progress,Completed',
-            'due_date' => 'nullable|date'
+            'due_date' => 'nullable|date',
+            'label' => 'nullable|string|max:50',
         ]);
 
         $task->update([
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
-            'due_date' => $request->due_date
+            'due_date' => $request->due_date,
+            'label' => $request->label,
         ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');

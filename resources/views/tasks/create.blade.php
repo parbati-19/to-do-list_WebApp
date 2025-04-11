@@ -25,6 +25,12 @@
                             <input type="date" name="due_date" id="due_date"
                                 class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white text-black dark:bg-gray-700 dark:text-white px-4 py-2">
                         </div>
+
+                        <div class="mb-4">
+                            <label for="label" class="block text-gray-800 dark:text-gray-100 mb-1">Label</label>
+                            <input type="text" name="label" id="label" placeholder="Optional label"
+                                class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white text-black dark:bg-gray-700 dark:text-white px-4 py-2">
+                        </div>
                     
                         <div class="mb-4">
                             <label for="status" class="block text-gray-800 dark:text-gray-100 mb-1">Status</label>

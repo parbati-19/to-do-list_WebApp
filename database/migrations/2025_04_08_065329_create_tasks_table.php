@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('due_date')->nullable();
             $table->enum('status', ['Pending', 'In_Progress', 'Completed'])->default('Pending');
+            $table->string('label')->nullable();
             $table->timestamps();
         });
         
