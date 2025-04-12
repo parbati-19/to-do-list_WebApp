@@ -21,7 +21,14 @@ class TaskController extends Controller
         // Filter by label (partial match)
         if ($request->has('label') && $request->label != '') {
             $tasks->where('label', 'like', '%' . $request->label . '%');
-
+        }
+        // Sorting based on the selected field
+        if ($request->has('sort_by')) {
+            $sortBy = $request->sort_by;
+            $direction = $request->direction ?? 'asc'; // Default direction is ascending
+            $tasks->orderBy($sortBy, $direction);
+        } else {
+            $tasks->orderBy('due_date', 'asc'); // Default sorting (if no filter or sort is selected)
         }
 
         $tasks = $tasks->get();

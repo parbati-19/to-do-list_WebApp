@@ -1,66 +1,67 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Todo App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Introduction
 
-## About Laravel
+This is a **Laravel-based Todo App** built for managing personal tasks. The project leverages the **Laravel 12** framework for the backend and **Blade** for the frontend, using a simple and clean interface to allow users to create, edit, view, and delete tasks. Users can filter tasks based on status and label.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Frameworks, Tools, and Technologies Used
+- **Laravel 12**: Backend framework for handling requests, database management, and authentication.
+- **Blade**: Templating engine used for building the frontend.
+- **Tailwind CSS**: Utility-first CSS framework for styling the frontend.
+- **MySQL**: Database for storing tasks and user data.
+- **Breeze**: For user authentication, ensuring each user can manage their own to-do lists.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Challenges & Solutions
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+During the development of this project, I encountered several challenges. Below are the challenges along with the solutions I implemented:
 
-## Learning Laravel
+### 1. **User Authentication and Task Ownership**
+   **Challenge**: Ensuring that each user could only access and manage their own tasks, and not the tasks of other users.
+   **Solution**: 
+   - I utilized Laravel's built-in **Breeze** system for user authentication. 
+   - In every relevant controller method (e.g., `index()`, `store()`, `edit()`, `update()`, `destroy()`), I added a condition to check if the task belongs to the logged-in user by comparing the `user_id` of the task to `Auth::id()`.
+   - This ensured that users could only view, edit, or delete their own tasks.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. **Filtering and Sorting Tasks**
+   **Challenge**: Implementing dynamic filtering of tasks by status and label and enabling sorting by due date.
+   **Solution**: 
+   - I added filtering functionality to the `TaskController` in the `index()` method by checking if `status` or `label` were set in the request. If they were, the query would be modified to include the respective filter using the `where()` method.
+   - For sorting, I made sure to provide sorting by **due date** directly in the query builder, allowing tasks to be listed in ascending or descending order as needed.
+   - In the Blade view, I included dropdowns for filtering and sorting, which dynamically updated the task list based on user selections.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. **Form Validation and Error Handling**
+   **Challenge**: Ensuring proper validation and handling of form errors during task creation and editing.
+   **Solution**:
+   - I used Laravel's built-in validation methods to validate incoming requests. For example, I validated that `title` was required and had a maximum length, while the `status` was constrained to specific values (`Pending`, `In_Progress`, `Completed`).
+   - I added error handling in the Blade views to display error messages next to the relevant form fields. This was done using Laravel's `@error` directive to show validation error messages clearly to users.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. **Responsive Design**
+   **Challenge**: Making sure that the Todo app's interface was responsive and user-friendly on both desktop and mobile devices.
+   **Solution**:
+   - I utilized **Tailwind CSS** to make the UI responsive. By using its utility classes, I ensured that the layout adjusted properly for different screen sizes.
+   - I also applied Tailwind’s `sm`, `md`, and `lg` breakpoints to adjust the layout for small, medium, and large screens. For example, I used flexbox utilities to stack or align items depending on the screen width.
 
-## Laravel Sponsors
+### 5. **Task Sorting UI**
+   **Challenge**: Sorting tasks by due date in the frontend UI and updating the view accordingly.
+   **Solution**:
+   - I added a simple dropdown for sorting tasks by due date. The user can select either "Sort by Due Date (Ascending)" or "Sort by Due Date (Descending)".
+   - In the `index()` method of the `TaskController`, I modified the query to handle sorting based on the selected option. I added conditions to check if the sorting option was set in the request and adjusted the query accordingly.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. **Managing Task Status Updates**
+   **Challenge**: Updating the task status and ensuring the changes were reflected in both the UI and the database.
+   **Solution**:
+   - In the task update form, I included a dropdown to allow users to change the status of the task. This was tied to the task's `status` column in the database.
+   - The status changes were validated and updated correctly in the database when the form was submitted. The view was then updated to reflect the new task status.
 
-### Premium Partners
+## Demo Video
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Check out the demo video showcasing the functionality and features of the Todo app:
+[Demo Video Link](https://youtu.be/tiPq4G7oiwM)
 
-## Contributing
+## Conclusion
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Building this Laravel-based Todo app has been a rewarding experience. I’ve gained a deeper understanding of how to integrate Blade for the frontend with a Laravel backend, handle user authentication, and work with databases efficiently. The project taught me a lot about form validation, dynamic filtering, and creating responsive designs with Tailwind CSS.
 
-## Code of Conduct
+The challenge also helped me improve my problem-solving skills when dealing with unexpected issues like managing relationships in the database, filtering data, and handling user input.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+In conclusion, this was a great learning experience, and I am confident that I’ve grown as a developer by completing this project.
